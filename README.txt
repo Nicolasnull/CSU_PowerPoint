@@ -59,6 +59,3 @@ Basic function of the program:
 
 
 I tried to make this user friendly and ran a bunch of tests, but if you find an error please let me know
-
-
-If you have any questions shoot me an email at nan0004@mix.wvu.edu
