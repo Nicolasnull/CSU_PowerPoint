@@ -9,19 +9,41 @@ class CSUPowerPoint:
     def introduction(self):
         print("\nWelcome to the CSU PowerPoint Generator V1!")
 
+    #Does this work????, If so, can it be rewritten where it is used?
+    #Do we need slideLayout for anything other than the textBox??????
+    #What happens if we don't have it in each method that uses it?
+    def setSlideInfo(self, layout, titleText):
+        slideLayout = self.presentation.slide_layouts[layout]
+        slide = self.presentation.slides.add_slide(slideLayout)
+        textBox = slide.shapes.title
+        textBox.text = titleText
+        
+        return (slideLayout, slide, textBox)
+
     def titleSlide(self):
+        #Repeated
+        """
         slideLayout = self.presentation.slide_layouts[0]
         slide = self.presentation.slides.add_slide(slideLayout)
         textBox = slide.shapes.title
         textBox.text = self.groupInfoFile.readline()
+        """
+        #Repeated
+        slideLayout, slide, textBox = self.setSlideInfo(0, self.groupInfoFile.readline())
+
         textBox = slide.placeholders[1]
         textBox.text = self.groupInfoFile.readline() + "\n" + self.groupInfoFile.readline()
 
     def officersSlide(self):
+        #Repeated
+        """
         slideLayout = self.presentation.slide_layouts[1]
         slide = self.presentation.slides.add_slide(slideLayout)
         textBox = slide.shapes.title
         textBox.text = self.groupInfoFile.readline()
+        """
+        #Repeated
+        slideLayout, slide, textBox = self.setSlideInfo(1, self.groupInfoFile.readline())
 
         textBox = slide.shapes[1]
         textFrame = textBox.text_frame
@@ -39,10 +61,15 @@ class CSUPowerPoint:
             i += 1
 
     def announcementsSlide(self):
+        #Repeated
+        """
         slideLayout = self.presentation.slide_layouts[1]
         slide = self.presentation.slides.add_slide(slideLayout)
         textBox = slide.shapes.title
         textBox.text = "Announcements"
+        """
+        #Repeated
+        slideLayout, slide, textBox = self.setSlideInfo(1, "Announcements")
 
         textBox = slide.shapes[1]
         textFrame = textBox.text_frame
@@ -82,14 +109,19 @@ class CSUPowerPoint:
         lines.text = "Meeting place: " + userInput
     
     def lessonHeaderSlide(self):
-        slideLayout = self.presentation.slide_layouts[2]
-        slide = self.presentation.slides.add_slide(slideLayout)
         print("\nEnter the title of the lesson: ")
         userInput = input("> ")
         while len(userInput) == 0:
             userInput = input("> ")
+        #Repeated
+        """
+        slideLayout = self.presentation.slide_layouts[2]
+        slide = self.presentation.slides.add_slide(slideLayout)
         textBox = slide.shapes.title
         textBox.text = userInput
+        """
+        #Repeated
+        slideLayout, slide, textBox = self.setSlideInfo(2, userInput)
 
         print("\nEnter the person teaching: ")
         userInput = input("> ")
@@ -143,10 +175,12 @@ class CSUPowerPoint:
             for lines in passage:
                 charInVerse = len(lines) / 50 + 1
                 if(charInVerse + linesUsed > 9):
+                    #Repeated
                     slideLayout = self.presentation.slide_layouts[1]
                     slide = self.presentation.slides.add_slide(slideLayout)
                     textBox = slide.shapes.title
                     textBox.text = title
+                    #Repeated
                     textBox = slide.shapes.placeholders[1]
                     textBox.text = lines
                     textFrame = textBox.text_frame
@@ -167,10 +201,12 @@ class CSUPowerPoint:
         userInput = input("> ")
         while len(userInput) == 0:
             userInput = input("> ")
+        #Repeated
         slideLayout = self.presentation.slide_layouts[2]
         slide = self.presentation.slides.add_slide(slideLayout)
         textBox = slide.shapes.title
         textBox.text = userInput
+        #Repeated
 
     def points(self):
         slideLayout = self.presentation.slide_layouts[1]
