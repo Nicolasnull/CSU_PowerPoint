@@ -1,0 +1,5 @@
+#Ignore the __pycache__ folder
+Scripts/__pycache__
+
+#Ignore the your_powerpoint generation
+Scripts/your_powerpoint.pptx
