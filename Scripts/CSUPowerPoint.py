@@ -25,6 +25,13 @@ class CSUPowerPoint:
         
         #Returns the slide layout, created slide and the created text box
         return (slideLayout, slide, textBox)
+    
+    def getUserInput(self):
+        userInput = input("> ")
+        while(len(userInput) == 0):
+            userInput = input("> ")
+
+        return userInput
 
     #Creates the title slide for the meetings
     def titleSlide(self):
@@ -84,9 +91,7 @@ class CSUPowerPoint:
             #Adds a paragraph for each prayer focus in the frame
             lines = textFrame.add_paragraph()
             #Gets user input until it equals 'done'
-            userInput = input("> ")
-            while len(userInput) == 0:
-                userInput = input("> ")
+            userInput = self.getUserInput()
             if userInput.lower().replace(" ", "") == "done":
                 break
             lines.text = userInput
@@ -97,9 +102,7 @@ class CSUPowerPoint:
         lines = textFrame.add_paragraph()
         print("Enter the name of the series you are going through: ")
         #Gets user input on the series
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
         lines.text = "Series: " + userInput
         
         #Location of Meetings
@@ -108,27 +111,21 @@ class CSUPowerPoint:
         lines = textFrame.add_paragraph()
         print("\nEnter where you are holding meetings: ")
         #Gets user input on the meeting place
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
         lines.text = "Meeting place: " + userInput
     
     #Creates a lesson header slide
     def lessonHeaderSlide(self):
         #Gets the title of the lesson from the user
         print("\nEnter the title of the lesson: ")
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
 
         #Sets the slide layout, slide and textbox
         slideLayout, slide, textBox = self.setSlideInfo(2, userInput)
 
         #Gets the name of the person teaching the lesson
         print("\nEnter the person teaching: ")
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
         textBox = slide.placeholders[1]
         textBox.text = userInput
     
@@ -218,9 +215,7 @@ class CSUPowerPoint:
     def header(self):
         #Gets the header information from the user
         print("Enter the header: ")
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
         #Assigns the values
         (slideLayout, slide, textBox) = self.setSlideInfo(2, userInput)
 
@@ -228,9 +223,7 @@ class CSUPowerPoint:
     def points(self):
         #Gets the title of the slides from the user
         print("Title of slide: ")
-        userInput = input("> ")
-        while len(userInput) == 0:
-            userInput = input("> ")
+        userInput = self.getUserInput()
 
         #Creates the slide and textbox
         (slideLayout, slide, textBox) = self.setSlideInfo(1, userInput)
@@ -242,9 +235,7 @@ class CSUPowerPoint:
         textFrame.text = input("> ") + '\n'
         #Until they enter "done"
         while True:
-            userInput = input("> ")
-            while userInput == 0:
-                userInput = input("> ")
+            userInput = self.getUserInput()
             if userInput.lower().replace(" ", "") == 'done':
                 break
             lines = textFrame.add_paragraph()
