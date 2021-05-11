@@ -35,7 +35,7 @@ class CSUPowerPoint:
         return userInput
     
     #Gets the chapter and verse from the user
-    def getChapterAndVerse(self, printStr):
+    def getChapterAndVerses(self, printStr):
         print(str(printStr))
         output = int(input("> "))
 
