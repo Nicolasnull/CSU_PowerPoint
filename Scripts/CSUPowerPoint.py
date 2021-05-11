@@ -26,10 +26,50 @@ class CSUPowerPoint:
         #Returns the slide layout, created slide and the created text box
         return (slideLayout, slide, textBox)
     
+    #Gets the input until the user enters something
     def getUserInput(self):
         userInput = input("> ")
         while(len(userInput) == 0):
             userInput = input("> ")
+
+        return userInput
+    
+    #Gets the chapter and verse from the user
+    def getChapterAndVerse(self, printStr):
+        print(str(printStr))
+        output = int(input("> "))
+
+        return output
+    
+    #Returns the passage as a whole
+    def getPassages(self, book, chapter, startVerse, endVerse):
+        passage = []
+        for lines in book:
+            if not ":" in lines:
+                continue
+            #Gets the index of the colon
+            firstColon = lines.index(":")
+            #Assigns the current chapter number
+            currentChapter = int(lines[0:firstColon])
+            #Gets the second colon
+            secondColon = lines.index(":", firstColon + 1,)
+            #Assigns the current verse
+            currentVerse = int(lines[firstColon+1:secondColon])
+            #If the chapter equals the current chapter of the file and the verses match, then append the information
+            if currentChapter == chapter and currentVerse >= startVerse and currentVerse <= endVerse:
+                passage.append(lines[firstColon+1:])
+
+        return passage
+
+    #Check the passage for irregularities
+    def checkPassage(self, userInput):
+        #If the input starts with a digit for the book, then make sure it is set to "1 John" for example
+        if userInput[0].isdigit():
+            userInput = userInput[0] + " " + userInput[1].upper() + userInput[2:]
+        elif userInput == "songofsolomon":#only book with spaces in it within the Bible
+            userInput = "Song of Solomon"
+        else:#Otherwise, set the first letter to a capital
+            userInput = userInput[0].upper() + userInput[1:]
 
         return userInput
 
@@ -139,47 +179,25 @@ class CSUPowerPoint:
             #Grabs the book text file
             book = open('../Files/KJV/' + userInput + '.txt', 'r')
             #Asks the user for the chapter
-            print("Chapter: ")
-            chapter = int(input("> "))
+            chapter = self.getChapterAndVerses("Chapter: ")
             #Asks the user for the starting verse
-            print("Starting Verse: ")
-            startVerse = int(input("> "))
+            startVerse = self.getChapterAndVerses("Starting Verse: ")
             #Asks the user for the ending verse
-            print("Ending Verse: ")
-            endVerse = int(input("> "))
+            endVerse = self.getChapterAndVerses("Ending Verse: ")
 
             #If the end verse is less than the start verse, raise an error
             if endVerse < startVerse:
                 raise(LookupError)
             
             #Iterate through the specified book to find the chapter
-            passage = []
-            for lines in book:
-                if not ":" in lines:
-                    continue
-                #Gets the index of the colon
-                firstColon = lines.index(":")
-                #Assigns the current chapter number
-                currentChapter = int(lines[0:firstColon])
-                #Gets the second colon
-                secondColon = lines.index(":", firstColon + 1,)
-                #Assigns the current verse
-                currentVerse = int(lines[firstColon+1:secondColon])
-                #If the chapter equals the current chapter of the file and the verses match, then append the information
-                if currentChapter == chapter and currentVerse >= startVerse and currentVerse <= endVerse:
-                    passage.append(lines[firstColon+1:])
+            passage = self.getPassages(book, chapter, startVerse, endVerse)
 
             #If the passage length is 0, raise a lookup error
             if(len(passage) == 0):
                 raise(LookupError)
             
-            #If the input starts with a digit for the book, then make sure it is set to "1 John" for example
-            if userInput[0].isdigit():
-                userInput = userInput[0] + " " + userInput[1].upper() + userInput[2:]
-            elif userInput == "songofsolomon":#only book with spaces in it within the Bible
-                userInput = "Song of Solomon"
-            else:#Otherwise, set the first letter to a capital
-                userInput = userInput[0].upper() + userInput[1:]
+            #Check for digits (1 John), or spaces (Song of Solomon)
+            userInput = self.checkPassage(userInput)
 
             #If they are equal, then we only put one verse
             if(startVerse == endVerse):
