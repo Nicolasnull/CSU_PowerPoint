@@ -1,5 +1,3 @@
-
-
 # Introduction
 
 This program was written by Nicolas Null and Jalen Wayt. The conceptual idea is credited to Nicolas Null.
@@ -8,7 +6,7 @@ It was designed to automate the process of creating PowerPoint presentations for
 # Instructions
 ### 1) Installing Python and required Libraries
 
-If you do not already have Python installed, you can install it at Python Download
+If you do not already have Python installed, you can install it at [Python Download](https://www.python.org/downloads/)
 Currently, the only library used is known as python-pptx. In order to install the library, a batch file is included for your convenience. If you would prefer to use the command line, you can type "pip install python-pptx".
 
 ### 2) Updating Organization Information 
