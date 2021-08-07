@@ -20,7 +20,7 @@ The program uses the format.pptx file to determine the theme to use. If you open
 
 ### 4) Function of the Program
 
-- The program I wrote is saved under app.py in this folder. It is in Python and uses the library python-pptx
+- The program is saved under Scripts/CLI/app.py for the command line version and Scripts/GUI/app.py for the interface versionin. The GUI version is currently being worked on. It is in Python and uses the library python-pptx
 - If you want to make any changes or add other functionality that would be the place to do it
 - To create the title slide it uses the text of the first 3 lines in the groupInfo.txt
 - To create the officers slide it uses from the 4th line until the end of the file
@@ -32,7 +32,7 @@ The program uses the format.pptx file to determine the theme to use. If you open
   single lines of input)
 - The remaining slides are the lesson
 - The user will loop through as many lesson slides as needed
-- I have coded 3 different options: Bible passages, Header slide and Bullet point slide
+- There are three options: Bible passages, Header slide and Bullet point slide
 - Bible passages will ask the user for the book, chapter, beginning verse and ending verse
   As of right now, the program can do 1 chapter at a time, but you can easily just have back
   to back bible passages with multiple chapters it will just have to be inputted one at a time.
@@ -42,10 +42,11 @@ The program uses the format.pptx file to determine the theme to use. If you open
   per slide. This allows on average 3 verses per slide depending on how big the verses are.
 - Header slides are simply a section header with only one line 
   These could be used as questions or whatever you need for a slide with only one line of text
-- bullet point slides have a title and then a list of points. simple enough.
+- Bullet point slides have a title and then a list of points. simple enough.
   The user will enter a single line for the title and then loop until done with points
 
 ### 5) Additional Information 
 
 The first version of this program only contains the verses for the King James Version (KJV). We do intend on adding some other languages upon request from potential users of this program.
+<br /><br />
 In order to run the program, you can execute the 'runme.bat' file.
