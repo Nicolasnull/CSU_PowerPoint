@@ -7,6 +7,7 @@ class CSUPowerPoint:
     def __init__(self):
         #Set the Tkinter Interface Variable
         self.interface = Tk()
+        self.interface.title("CSU PowerPoint Generator")
         #The presentation uses the format/design of the chosen powerpoint
         self.presentation = Presentation("../../Files/format.pptx")
         #Has all officer information
@@ -15,13 +16,13 @@ class CSUPowerPoint:
     #Performs the introduction page in the GUI
     def introduction(self):
         #Creates an Introductory Message
-        introductionLabel = Label(text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
+        introductionLabel = Label(self.interface, text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
         introductionLabel.pack()
         #Adds a next button to move to the next page
-        nextButton = Button(text="Next", fg="green", command=self.titleSlide)
+        nextButton = Button(self.interface, text="Next", fg="green", command=self.titleSlide)
         nextButton.pack()
         #Adds an exit button to close the application
-        exitButton = Button(text="Exit", fg="red", command=self.interface.destroy)
+        exitButton = Button(self.interface, text="Exit", fg="red", command=self.interface.destroy)
         exitButton.pack()
         #Executes the interface
         self.interface.mainloop()
