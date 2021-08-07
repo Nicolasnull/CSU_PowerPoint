@@ -1,17 +1,30 @@
 from pptx import Presentation
 from pptx.util import Pt
+from tkinter import *
 
 #Defined as the functions needed to make a proper powerpoint for our meetings
 class CSUPowerPoint:
     def __init__(self):
+        #Set the Tkinter Interface Variable
+        self.interface = Tk()
         #The presentation uses the format/design of the chosen powerpoint
-        self.presentation = Presentation("../Files/format.pptx")
+        self.presentation = Presentation("../../Files/format.pptx")
         #Has all officer information
-        self.groupInfoFile = open("../Files/groupInfo.txt", "r")
+        self.groupInfoFile = open("../../Files/groupInfo.txt", "r")
 
-    #Performs the introduction in the CLI
+    #Performs the introduction page in the GUI
     def introduction(self):
-        print("\nWelcome to the CSU PowerPoint Generator V1!")
+        #Creates an Introductory Message
+        introductionLabel = Label(text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
+        introductionLabel.pack()
+        #Adds a next button to move to the next page
+        nextButton = Button(text="Next", fg="green", command=self.titleSlide)
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(text="Exit", fg="red", command=self.interface.destroy)
+        exitButton.pack()
+        #Executes the interface
+        self.interface.mainloop()
 
     #Function to simplify the calls to create a slide, add it to the presentation, and assign text to it
     def setSlideInfo(self, layout, titleText):
