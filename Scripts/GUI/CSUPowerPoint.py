@@ -13,20 +13,6 @@ class CSUPowerPoint:
         #Has all officer information
         self.groupInfoFile = open("../../Files/groupInfo.txt", "r")
 
-    #Performs the introduction page in the GUI
-    def introduction(self):
-        #Creates an Introductory Message
-        introductionLabel = Label(self.interface, text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
-        introductionLabel.pack()
-        #Adds a next button to move to the next page
-        nextButton = Button(self.interface, text="Next", fg="green", command=self.titleSlide)
-        nextButton.pack()
-        #Adds an exit button to close the application
-        exitButton = Button(self.interface, text="Exit", fg="red", command=self.interface.destroy)
-        exitButton.pack()
-        #Executes the interface
-        self.interface.mainloop()
-
     #Function to simplify the calls to create a slide, add it to the presentation, and assign text to it
     def setSlideInfo(self, layout, titleText):
         #The layout of the slide (title slide, information slide, etc)
@@ -87,6 +73,23 @@ class CSUPowerPoint:
 
         return userInput
 
+    #Performs the introduction page in the GUI
+    def introduction(self):
+        #Create the Introductory Frame
+        self.introductoryFrame = Frame(self.interface)
+        self.introductoryFrame.pack()
+        #Creates an Introductory Message
+        introductionLabel = Label(self.introductoryFrame, text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
+        introductionLabel.pack()
+        #Adds a next button to move to the next page
+        nextButton = Button(self.introductoryFrame, text="Next", fg="green", command=self.announcementsSlide)
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.introductoryFrame, text="Exit", fg="red", command=self.interface.destroy)
+        exitButton.pack()
+        #Executes the interface
+        self.introductoryFrame.mainloop()
+
     #Creates the title slide for the meetings
     def titleSlide(self):
         #Sets the slide layout, slide and textbox
@@ -125,6 +128,18 @@ class CSUPowerPoint:
 
     #Creates the announcements slide
     def announcementsSlide(self):
+        #Destroys all elements created within the introductory frame
+        #The title and officers slides are generated based on the file input
+        self.introductoryFrame.destroy()
+        #Creates a new frame for the announcements input
+        self.announcementsFrame = Frame(self.interface)
+        self.announcementsFrame.pack()
+        #Adds a next button to move to the next page
+        nextButton = Button(self.announcementsFrame, text="Next", fg="green")
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.announcementsFrame, text="Exit", fg="red", command=self.interface.destroy)
+        exitButton.pack()
         #Sets the slide layout, slide and textbox
         (slideLayout, slide, textBox) = self.setSlideInfo(1, "Announcements")
 
@@ -137,7 +152,7 @@ class CSUPowerPoint:
         lines.text = "Prayer Focus"
         lines.level = 0
         
-        #Prayer Focus
+        #Prayer Focus (Section to be edited to work with GUI)
         print("\nPrayer Focus List: ")
         print("Enter each prayer focus and then hit enter.")
         print("After the last focus, type \'done\' and hit enter to move on: ")
@@ -183,7 +198,7 @@ class CSUPowerPoint:
         textBox = slide.placeholders[1]
         textBox.text = userInput
     
-    #Creates a bible passage using the KJV folder
+    #Creates a bible passage using the KJV folder (Helper Method)
     def biblePassage(self):
         try:
             #Gets the book from th euser
@@ -243,7 +258,7 @@ class CSUPowerPoint:
         except LookupError:#If the user enters an invalid verse, tell them it is invalid
             print("Invalid verses. No such passage exists")
 
-    #Creates the header slide of the presentation
+    #Creates the header slide of the presentation (Helper Method)
     def header(self):
         #Gets the header information from the user
         print("Enter the header: ")
@@ -251,7 +266,7 @@ class CSUPowerPoint:
         #Assigns the values
         (slideLayout, slide, textBox) = self.setSlideInfo(2, userInput)
 
-    #Defines the points of the message
+    #Defines the points of the message (Helper Method)
     def points(self):
         #Gets the title of the slides from the user
         print("Title of slide: ")
