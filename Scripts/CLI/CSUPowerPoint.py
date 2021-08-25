@@ -177,7 +177,7 @@ class CSUPowerPoint:
             #Sets it to lowercase after replacing the spaces with empty strings
             userInput = input("> ").replace(" ", "").lower()
             #Grabs the book text file
-            book = open('../Files/KJV/' + userInput + '.txt', 'r')
+            book = open('../../Files/KJV/' + userInput + '.txt', 'r')
             #Asks the user for the chapter
             chapter = self.getChapterAndVerses("Chapter: ")
             #Asks the user for the starting verse
