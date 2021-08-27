@@ -20,7 +20,7 @@ The program uses the format.pptx file to determine the theme to use. If you open
 
 ### 4) Function of the Program
 
-- The program is saved under Scripts/CLI/app.py for the command line version and Scripts/GUI/app.py for the interface versionin. The GUI version is currently being worked on. It is in Python and uses the library python-pptx
+- The program is saved under Scripts/CLI/app.py for the command line version and Scripts/GUI/app.py for the interface version. The GUI version is currently being worked on. It is in Python and uses the library python-pptx
 - If you want to make any changes or add other functionality that would be the place to do it
 - To create the title slide it uses the text of the first 3 lines in the groupInfo.txt
 - To create the officers slide it uses from the 4th line until the end of the file
