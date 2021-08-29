@@ -4,14 +4,19 @@ from tkinter import *
 
 #Defined as the functions needed to make a proper powerpoint for our meetings
 class CSUPowerPoint:
-    def __init__(self):
+    def __init__(self, tkinterInterface):
         #Set the Tkinter Interface Variable
-        self.interface = Tk()
+        self.interface = tkinterInterface
         self.interface.title("CSU PowerPoint Generator")
         #The presentation uses the format/design of the chosen powerpoint
         self.presentation = Presentation("../../Files/format.pptx")
         #Has all officer information
         self.groupInfoFile = open("../../Files/groupInfo.txt", "r")
+        
+        #Start with introduction page
+        self.titleSlide()
+        self.officersSlide()
+        self.introduction()
 
     #Function to simplify the calls to create a slide, add it to the presentation, and assign text to it
     def setSlideInfo(self, layout, titleText):
@@ -87,8 +92,6 @@ class CSUPowerPoint:
         #Adds an exit button to close the application
         exitButton = Button(self.introductoryFrame, text="Exit", fg="red", command=self.interface.destroy)
         exitButton.pack()
-        #Executes the interface
-        self.introductoryFrame.mainloop()
 
     #Creates the title slide for the meetings
     def titleSlide(self):
@@ -126,6 +129,23 @@ class CSUPowerPoint:
             person = self.groupInfoFile.readline()
             i += 1
 
+    def addPrayers(self, prayerFocus, textFrame):
+        prayerFocus = prayerFocus.splitlines()
+        for index in range(len(prayerFocus)):
+            if(prayerFocus[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = prayerFocus[index]
+                lines.level = 2
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = prayerFocus[index]
+                lines.level = 1
+
+
+    def savePresentation(self):
+        self.presentation.save("your_powerpoint.pptx")
+        self.interface.destroy()
+
     #Creates the announcements slide
     def announcementsSlide(self):
         #Destroys all elements created within the introductory frame
@@ -134,15 +154,9 @@ class CSUPowerPoint:
         #Creates a new frame for the announcements input
         self.announcementsFrame = Frame(self.interface)
         self.announcementsFrame.pack()
-        #Adds a next button to move to the next page
-        nextButton = Button(self.announcementsFrame, text="Next", fg="green")
-        nextButton.pack()
-        #Adds an exit button to close the application
-        exitButton = Button(self.announcementsFrame, text="Exit", fg="red", command=self.interface.destroy)
-        exitButton.pack()
+
         #Sets the slide layout, slide and textbox
         (slideLayout, slide, textBox) = self.setSlideInfo(1, "Announcements")
-
         #Adds a shape to the textbox
         textBox = slide.shapes[1]
         #Gets the text frame of the textbox
@@ -153,9 +167,13 @@ class CSUPowerPoint:
         lines.level = 0
         
         #Prayer Focus (Section to be edited to work with GUI)
-        print("\nPrayer Focus List: ")
-        print("Enter each prayer focus and then hit enter.")
-        print("After the last focus, type \'done\' and hit enter to move on: ")
+        announcementsLabel = Label(self.announcementsFrame, text="Enter prayer focuses below: ")
+        announcementsLabel.pack()
+
+        prayerFocusText = Text(self.announcementsFrame)
+        prayerFocusText.pack()
+
+        '''
         while True:
             #Adds a paragraph for each prayer focus in the frame
             lines = textFrame.add_paragraph()
@@ -182,6 +200,13 @@ class CSUPowerPoint:
         #Gets user input on the meeting place
         userInput = self.getUserInput()
         lines.text = "Meeting place: " + userInput
+        '''
+        #Adds a next button to move to the next page
+        nextButton = Button(self.announcementsFrame, text="Next", fg="green", command=lambda: self.addPrayers(prayerFocusText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.announcementsFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
     
     #Creates a lesson header slide
     def lessonHeaderSlide(self):
