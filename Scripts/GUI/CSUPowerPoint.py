@@ -239,6 +239,9 @@ class CSUPowerPoint:
         exitButton = Button(self.seriesAndLocationFrame, text="Exit", fg="red", command=self.savePresentation)
         exitButton.pack()
     
+    '''
+        Still need to do this portion!!!!
+    '''
     #Creates a lesson header slide
     def lessonHeaderSlide(self):
         #Gets the title of the lesson from the user
@@ -254,6 +257,9 @@ class CSUPowerPoint:
         textBox = slide.placeholders[1]
         textBox.text = userInput
 
+    '''
+        Figure out how to properly parse the selection
+    '''
     #Creates a bible passage using the KJV folder (Helper Method)
     def biblePassage(self):
         #Destroy the lessonSlidesFrame
@@ -427,40 +433,66 @@ class CSUPowerPoint:
         #Destroy the lessonSlidesFrame
         self.lessonSlidesFrame.destroy()
 
+        #Create the header frame
+        self.headerSlideFrame = Frame(self.interface)
+        self.headerSlideFrame.pack()
 
+        headerLabel = Label(self.headerSlideFrame, text="Enter the header: ")
+        headerLabel.pack()
+        headerText = Text(self.headerSlideFrame, height=1)
+        headerText.pack()
 
-        #Gets the header information from the user
-        print("Enter the header: ")
-        userInput = self.getUserInput()
+        continueButton = Button(self.headerSlideFrame, text="Continue", fg="green", command=lambda: self.headerToLessonSlides(headerText.get('1.0', 'end-1c')))
+        continueButton.pack()
+
+    def headerToLessonSlides(self, title):
         #Assigns the values
-        (slideLayout, slide, textBox) = self.setSlideInfo(2, userInput)
+        (slideLayout, slide, textBox) = self.setSlideInfo(2, title)
+        self.headerSlideFrame.destroy()
+        self.lessonSlides()
+
+    def addPoints(self, title, points):
+        #Creates the slide and textbox
+        (slideLayout, slide, textBox) = self.setSlideInfo(1, title)
+        #Assigns a placeholder for the frame
+        textBox = slide.shapes.placeholders[1]
+        textFrame = textBox.text_frame
+
+        points = points.splitlines()
+        for index in range(len(points)):
+            if(points[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = points[index]
+                lines.level = 1
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = points[index]
+                lines.level = 0
+        
+        self.pointsSlideFrame.destroy()
+        self.lessonSlides()
 
     #Defines the points of the message (Helper Method)
     def points(self):
         #Destroy the lessonSlidesFrame
         self.lessonSlidesFrame.destroy()
 
+        #Create PointsSlideFrame
+        self.pointsSlideFrame = Frame(self.interface)
+        self.pointsSlideFrame.pack()
 
+        pointsTitleLabel = Label(self.pointsSlideFrame, text="Enter Title of Slide: ")
+        pointsTitleLabel.pack()
+        pointsTitleText = Text(self.pointsSlideFrame, height=1)
+        pointsTitleText.pack()
 
-        #Gets the title of the slides from the user
-        print("Title of slide: ")
-        userInput = self.getUserInput()
+        pointsLabel = Label(self.pointsSlideFrame, text="Enter points below: ")
+        pointsLabel.pack()
+        pointsText = Text(self.pointsSlideFrame)
+        pointsText.pack()
 
-        #Creates the slide and textbox
-        (slideLayout, slide, textBox) = self.setSlideInfo(1, userInput)
-        #Assigns a placeholder for the frame
-        textBox = slide.shapes.placeholders[1]
-        textFrame = textBox.text_frame
-        #Get all of the points from the user
-        print("Enter the points for the slide. Type \'done\' to finish slide")
-        textFrame.text = input("> ") + '\n'
-        #Until they enter "done"
-        while True:
-            userInput = self.getUserInput()
-            if userInput.lower().replace(" ", "") == 'done':
-                break
-            lines = textFrame.add_paragraph()
-            lines.text = userInput + '\n'
+        continueButton = Button(self.pointsSlideFrame, text="Continue", fg="green", command=lambda: self.addPoints(pointsTitleText.get('1.0', 'end-1c'), pointsText.get('1.0', 'end-1c')))
+        continueButton.pack()
 
     #Defines the lesson slides and asks the user for input each time until they quit
     def lessonSlides(self):
