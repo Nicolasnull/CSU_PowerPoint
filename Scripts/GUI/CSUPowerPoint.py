@@ -31,21 +31,6 @@ class CSUPowerPoint:
         #Returns the slide layout, created slide and the created text box
         return (slideLayout, slide, textBox)
     
-    #Gets the input until the user enters something
-    def getUserInput(self):
-        userInput = input("> ")
-        while(len(userInput) == 0):
-            userInput = input("> ")
-
-        return userInput
-    
-    #Gets the chapter and verse from the user
-    def getChapterAndVerses(self, printStr):
-        print(str(printStr))
-        output = int(input("> "))
-
-        return output
-    
     #Returns the passage as a whole
     def getPassages(self, book, chapter, startVerse, endVerse):
         passage = []
