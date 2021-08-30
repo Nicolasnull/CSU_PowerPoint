@@ -168,8 +168,7 @@ class CSUPowerPoint:
         lines.text = "Meeting Place: " + location
 
         self.seriesAndLocationFrame.destroy()
-
-        #self.savePresentation()
+        self.lessonSlides()
 
     def savePresentation(self):
         self.presentation.save("your_powerpoint.pptx")
@@ -269,9 +268,116 @@ class CSUPowerPoint:
         userInput = self.getUserInput()
         textBox = slide.placeholders[1]
         textBox.text = userInput
-    
+
     #Creates a bible passage using the KJV folder (Helper Method)
     def biblePassage(self):
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+        #Create Frame for biblePassage
+        self.biblePassageFrame = Frame(self.interface, width="100")
+        self.biblePassageFrame.pack()
+
+        #Create a drop-down for selection of books from old and new testaments
+        booksOfBible = [
+            "Genesis",
+            "Exodus",
+            "Leviticus",
+            "Numbers",
+            "Deuteronomy",
+            "Joshua",
+            "Judges",
+            "Ruth",
+            "1 Samuel",
+            "2 Samuel",
+            "1 Kings",
+            "2 Kings",
+            "1 Chronicles",
+            "2 Chronicles",
+            "Ezra",
+            "Job",
+            "Psalms",
+            "Proverbs",
+            "Ecclesiastes",
+            "Song of Solomon",
+            "Isaiah",
+            "Jeremiah",
+            "Lamentations",
+            "Ezekiel",
+            "Daniel",
+            "Hosea",
+            "Joel",
+            "Amos",
+            "Obadiah",
+            "Jonah",
+            "Micah",
+            "Nahum",
+            "Habakkuk",
+            "Zephaniah",
+            "Haggai",
+            "Zechariah",
+            "Malachi",
+            "Matthew",
+            "Mark",
+            "Luke",
+            "John",
+            "Acts",
+            "Romans",
+            "1 Corinthians",
+            "2 Corinthians",
+            "Galatians",
+            "Ephesians",
+            "Philippians",
+            "Colossians",
+            "1 Thessalonians",
+            "2 Thessalonians",
+            "1 Timothy",
+            "2 Timothy",
+            "Titus",
+            "Philemon",
+            "Hebrews",
+            "James",
+            "1 Peter",
+            "2 Peter",
+            "1 John",
+            "2 John",
+            "3 John",
+            "Jude",
+            "Revelation"
+        ]
+        selectedBook = StringVar(self.biblePassageFrame)
+        selectedBook.set("Select a Book")
+
+        #This does not work well....need to see if we can change how it works or if there are other options
+        #Online says there is another library called ttk or something like that
+        bibleBookDropDown = OptionMenu(self.biblePassageFrame, selectedBook, *booksOfBible)
+        bibleBookDropDown.config(width=15)
+        bibleBookDropDown.pack()
+
+        #Get the chapter from the user
+        chapterLabel = Label(self.biblePassageFrame, text="Enter the Chapter: ")
+        chapterLabel.pack()
+        chapterText = Text(self.biblePassageFrame, height=1)
+        chapterText.pack()
+
+        #Get the start verse
+        verseStartLabel = Label(self.biblePassageFrame, text="Enter the Start Verse: ")
+        verseStartLabel.pack()
+        verseStart = Text(self.biblePassageFrame, height=1)
+        verseStart.pack()
+
+        #Get the end verse
+        verseEndLabel = Label(self.biblePassageFrame, text="Enter the end verse: ")
+        verseEndLabel.pack()
+        verseEnd = Text(self.biblePassageFrame, height=1)
+        verseEnd.pack()
+
+        #Adds a next button to move to the next page
+        #selectedBook = str(selectedBook.get().replace(" ", "").lower())
+        continueButton = Button(self.biblePassageFrame, text="Continue", fg="green", command=lambda: self)
+        continueButton.pack()
+
+        '''
         try:
             #Gets the book from th euser
             print("\nEnter book of the Bible: ")
@@ -329,9 +435,15 @@ class CSUPowerPoint:
             print("Must enter a valid number")
         except LookupError:#If the user enters an invalid verse, tell them it is invalid
             print("Invalid verses. No such passage exists")
+        '''
 
     #Creates the header slide of the presentation (Helper Method)
     def header(self):
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+
+
         #Gets the header information from the user
         print("Enter the header: ")
         userInput = self.getUserInput()
@@ -340,6 +452,11 @@ class CSUPowerPoint:
 
     #Defines the points of the message (Helper Method)
     def points(self):
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+
+
         #Gets the title of the slides from the user
         print("Title of slide: ")
         userInput = self.getUserInput()
@@ -362,20 +479,17 @@ class CSUPowerPoint:
 
     #Defines the lesson slides and asks the user for input each time until they quit
     def lessonSlides(self):
-        while True:
-            #B = Bible Passage, H = Header, P = Points, quit = create presentation
-            print("\nChoices: \'B\' for Bible Passage, \'H\' for slide with a header, \'P\' for slide with points, \'quit\' to complete lesson")
-            userInput = input("> ")
-            userInput = userInput.upper().replace(" ", "")
-            if(userInput == 'QUIT'):
-                break
-            elif(userInput == 'B'):#Create slide(s) with the passages
-                self.biblePassage()
-            elif(userInput == 'H'):#Create a header slide to define a section
-                self.header()
-            elif(userInput == 'P'):#Create a points slide to further discuss topic
-                self.points()
-            else:#Tell them it was an invalid choice
-                print("Enter a valid choice")
-        #Create and save the presentation
-        self.presentation.save("your_powerpoint.pptx")
+        #Add Lesson Slides frame
+        self.lessonSlidesFrame = Frame(self.interface)
+        self.lessonSlidesFrame.pack()
+
+        biblePassageButton = Button(self.lessonSlidesFrame, text="Add Bible Passage", command=lambda: self.biblePassage())
+        biblePassageButton.pack()
+        headerButton = Button(self.lessonSlidesFrame, text="Add Header", command=lambda: self.header())
+        headerButton.pack()
+        pointsButton = Button(self.lessonSlidesFrame, text="Add Points", command=lambda: self.points())
+        pointsButton.pack()
+
+        #Adds a next button to move to the next page
+        saveButton = Button(self.lessonSlidesFrame, text="Save Presentation", fg="green", command=lambda: self.savePresentation())
+        saveButton.pack()
