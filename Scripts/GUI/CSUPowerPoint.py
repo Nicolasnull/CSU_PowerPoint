@@ -87,7 +87,7 @@ class CSUPowerPoint:
         introductionLabel = Label(self.introductoryFrame, text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
         introductionLabel.pack()
         #Adds a next button to move to the next page
-        nextButton = Button(self.introductoryFrame, text="Next", fg="green", command=self.announcementsSlide)
+        nextButton = Button(self.introductoryFrame, text="Next", fg="green", command=self.prayersAnnouncementsSlide)
         nextButton.pack()
         #Adds an exit button to close the application
         exitButton = Button(self.introductoryFrame, text="Exit", fg="red", command=self.interface.destroy)
@@ -140,14 +140,46 @@ class CSUPowerPoint:
                 lines = textFrame.add_paragraph()
                 lines.text = prayerFocus[index]
                 lines.level = 1
+        
+        self.announcementsFrame.destroy()
+        self.otherAnnouncementsFrame.pack()
 
+    def addOtherAnnouncements(self, announcements, textFrame):
+        announcements = announcements.splitlines()
+        for index in range(len(announcements)):
+            if(announcements[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = announcements[index]
+                lines.level = 1
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = announcements[index]
+                lines.level = 0
+        
+        self.otherAnnouncementsFrame.destroy()
+        self.seriesAndLocationFrame.pack()
+
+    def addSeriesAndLocation(self, series, location, textFrame):
+        lines =  textFrame.add_paragraph()
+        lines.text = "Series: " + series
+        lines.level = 0
+
+        lines = textFrame.add_paragraph()
+        lines.text = "Meeting Place: " + location
+
+        self.seriesAndLocationFrame.destroy()
+
+        #self.savePresentation()
 
     def savePresentation(self):
         self.presentation.save("your_powerpoint.pptx")
         self.interface.destroy()
 
     #Creates the announcements slide
-    def announcementsSlide(self):
+    def prayersAnnouncementsSlide(self):
+        '''
+            Section: Prayer Focus
+        '''
         #Destroys all elements created within the introductory frame
         #The title and officers slides are generated based on the file input
         self.introductoryFrame.destroy()
@@ -161,6 +193,7 @@ class CSUPowerPoint:
         textBox = slide.shapes[1]
         #Gets the text frame of the textbox
         textFrame = textBox.text_frame
+
         #Adds text to the frame
         lines = textFrame
         lines.text = "Prayer Focus"
@@ -173,39 +206,53 @@ class CSUPowerPoint:
         prayerFocusText = Text(self.announcementsFrame)
         prayerFocusText.pack()
 
-        '''
-        while True:
-            #Adds a paragraph for each prayer focus in the frame
-            lines = textFrame.add_paragraph()
-            #Gets user input until it equals 'done'
-            userInput = self.getUserInput()
-            if userInput.lower().replace(" ", "") == "done":
-                break
-            lines.text = userInput
-            lines.level = 1
-
-        #Current Series
-        #Adds a paragraph for the series information
-        lines = textFrame.add_paragraph()
-        print("Enter the name of the series you are going through: ")
-        #Gets user input on the series
-        userInput = self.getUserInput()
-        lines.text = "Series: " + userInput
-        
-        #Location of Meetings
-        #Adds a paragraphs for the location of the meetings
-        lines = textFrame.add_paragraph()
-        lines = textFrame.add_paragraph()
-        print("\nEnter where you are holding meetings: ")
-        #Gets user input on the meeting place
-        userInput = self.getUserInput()
-        lines.text = "Meeting place: " + userInput
-        '''
         #Adds a next button to move to the next page
         nextButton = Button(self.announcementsFrame, text="Next", fg="green", command=lambda: self.addPrayers(prayerFocusText.get('1.0', 'end-1c'), textFrame))
         nextButton.pack()
         #Adds an exit button to close the application
         exitButton = Button(self.announcementsFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
+
+        '''
+            Section: Other Announcements
+        '''
+        self.otherAnnouncementsFrame = Frame(self.interface)
+
+        otherAnnouncementsLabel = Label(self.otherAnnouncementsFrame, text="Enter other announcements below:")
+        otherAnnouncementsLabel.pack()
+
+        otherAnnouncementsText = Text(self.otherAnnouncementsFrame)
+        otherAnnouncementsText.pack()
+
+        #Adds a next button to move to the next page
+        nextButton = Button(self.otherAnnouncementsFrame, text="Next", fg="green", command=lambda: self.addOtherAnnouncements(otherAnnouncementsText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.otherAnnouncementsFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
+
+        '''
+            Section: Series and Location
+        '''
+        self.seriesAndLocationFrame = Frame(self.interface)
+
+        seriesLabel = Label(self.seriesAndLocationFrame, text="Enter Series:")
+        seriesLabel.pack()
+
+        seriesText = Text(self.seriesAndLocationFrame, height="10")
+        seriesText.pack()
+
+        locationLabel = Label(self.seriesAndLocationFrame, text="Enter Location:")
+        locationLabel.pack()
+
+        locationText = Text(self.seriesAndLocationFrame, height="10")
+        locationText.pack()
+
+        #Adds a next button to move to the next page
+        nextButton = Button(self.seriesAndLocationFrame, text="Next", fg="green", command=lambda: self.addSeriesAndLocation(seriesText.get('1.0', 'end-1c'), locationText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.seriesAndLocationFrame, text="Exit", fg="red", command=self.savePresentation)
         exitButton.pack()
     
     #Creates a lesson header slide
