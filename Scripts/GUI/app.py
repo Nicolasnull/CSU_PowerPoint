@@ -1,24 +1,27 @@
 from pptx import Presentation
 from pptx.util import Pt
+from tkinter import *
 from CSUPowerPoint import *
 
 class App:
-    def main():
+    def main(interface):
         #Creates the variable to access the methods of the CSUPowerpoint module
-        CSUPPT = CSUPowerPoint()
+        CSUPPT = CSUPowerPoint(interface)
         #Creates the introduction slide
-        CSUPPT.introduction()
+        #CSUPPT.introduction()
         #Creates the title slide
-        CSUPPT.titleSlide()
+        #CSUPPT.titleSlide()
         #Creates the officers slide
-        CSUPPT.officersSlide()
+        #CSUPPT.officersSlide()
         #Creates the announcements slide
-        CSUPPT.announcementsSlide()
+        #CSUPPT.announcementsSlide()
         #Creates the lesson header slides
-        CSUPPT.lessonHeaderSlide()
+        #CSUPPT.lessonHeaderSlide()
         #Creates the lesson slides
-        CSUPPT.lessonSlides()
+        #CSUPPT.lessonSlides()
 
     #If this is the file that is ran, then execute the main function
     if __name__ == "__main__":
-        main()
+        interface = Tk()
+        main(interface)
+        interface.mainloop()

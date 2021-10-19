@@ -1,17 +1,22 @@
 from pptx import Presentation
 from pptx.util import Pt
+from tkinter import *
 
 #Defined as the functions needed to make a proper powerpoint for our meetings
 class CSUPowerPoint:
-    def __init__(self):
+    def __init__(self, tkinterInterface):
+        #Set the Tkinter Interface Variable
+        self.interface = tkinterInterface
+        self.interface.title("CSU PowerPoint Generator")
         #The presentation uses the format/design of the chosen powerpoint
-        self.presentation = Presentation("../Files/format.pptx")
+        self.presentation = Presentation("../../Files/format.pptx")
         #Has all officer information
-        self.groupInfoFile = open("../Files/groupInfo.txt", "r")
-
-    #Performs the introduction in the CLI
-    def introduction(self):
-        print("\nWelcome to the CSU PowerPoint Generator V1!")
+        self.groupInfoFile = open("../../Files/groupInfo.txt", "r")
+        
+        #Start with introduction page
+        self.titleSlide()
+        self.officersSlide()
+        self.introduction()
 
     #Function to simplify the calls to create a slide, add it to the presentation, and assign text to it
     def setSlideInfo(self, layout, titleText):
@@ -25,21 +30,6 @@ class CSUPowerPoint:
         
         #Returns the slide layout, created slide and the created text box
         return (slideLayout, slide, textBox)
-    
-    #Gets the input until the user enters something
-    def getUserInput(self):
-        userInput = input("> ")
-        while(len(userInput) == 0):
-            userInput = input("> ")
-
-        return userInput
-    
-    #Gets the chapter and verse from the user
-    def getChapterAndVerses(self, printStr):
-        print(str(printStr))
-        output = int(input("> "))
-
-        return output
     
     #Returns the passage as a whole
     def getPassages(self, book, chapter, startVerse, endVerse):
@@ -72,6 +62,21 @@ class CSUPowerPoint:
             userInput = userInput[0].upper() + userInput[1:]
 
         return userInput
+
+    #Performs the introduction page in the GUI
+    def introduction(self):
+        #Create the Introductory Frame
+        self.introductoryFrame = Frame(self.interface)
+        self.introductoryFrame.pack()
+        #Creates an Introductory Message
+        introductionLabel = Label(self.introductoryFrame, text="Welcome to the CSU PowerPoint Generator V1!\nClick the \"Next\" Button to continue!")
+        introductionLabel.pack()
+        #Adds a next button to move to the next page
+        nextButton = Button(self.introductoryFrame, text="Next", fg="green", command=self.prayersAnnouncementsSlide)
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.introductoryFrame, text="Exit", fg="red", command=self.interface.destroy)
+        exitButton.pack()
 
     #Creates the title slide for the meetings
     def titleSlide(self):
@@ -109,51 +114,134 @@ class CSUPowerPoint:
             person = self.groupInfoFile.readline()
             i += 1
 
+    def addPrayers(self, prayerFocus, textFrame):
+        prayerFocus = prayerFocus.splitlines()
+        for index in range(len(prayerFocus)):
+            if(prayerFocus[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = prayerFocus[index]
+                lines.level = 2
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = prayerFocus[index]
+                lines.level = 1
+        
+        self.announcementsFrame.destroy()
+        self.otherAnnouncementsFrame.pack()
+
+    def addOtherAnnouncements(self, announcements, textFrame):
+        announcements = announcements.splitlines()
+        for index in range(len(announcements)):
+            if(announcements[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = announcements[index]
+                lines.level = 1
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = announcements[index]
+                lines.level = 0
+        
+        self.otherAnnouncementsFrame.destroy()
+        self.seriesAndLocationFrame.pack()
+
+    def addSeriesAndLocation(self, series, location, textFrame):
+        lines =  textFrame.add_paragraph()
+        lines.text = "Series: " + series
+        lines.level = 0
+
+        lines = textFrame.add_paragraph()
+        lines.text = "Meeting Place: " + location
+
+        self.seriesAndLocationFrame.destroy()
+        self.lessonSlides()
+
+    def savePresentation(self):
+        self.presentation.save("your_powerpoint.pptx")
+        self.interface.destroy()
+
     #Creates the announcements slide
-    def announcementsSlide(self):
+    def prayersAnnouncementsSlide(self):
+        '''
+            Section: Prayer Focus
+        '''
+        #Destroys all elements created within the introductory frame
+        #The title and officers slides are generated based on the file input
+        self.introductoryFrame.destroy()
+        #Creates a new frame for the announcements input
+        self.announcementsFrame = Frame(self.interface)
+        self.announcementsFrame.pack()
+
         #Sets the slide layout, slide and textbox
         (slideLayout, slide, textBox) = self.setSlideInfo(1, "Announcements")
-
         #Adds a shape to the textbox
         textBox = slide.shapes[1]
         #Gets the text frame of the textbox
         textFrame = textBox.text_frame
+
         #Adds text to the frame
         lines = textFrame
         lines.text = "Prayer Focus"
         lines.level = 0
         
-        #Prayer Focus
-        print("\nPrayer Focus List: ")
-        print("Enter each prayer focus and then hit enter.")
-        print("After the last focus, type \'done\' and hit enter to move on: ")
-        while True:
-            #Adds a paragraph for each prayer focus in the frame
-            lines = textFrame.add_paragraph()
-            #Gets user input until it equals 'done'
-            userInput = self.getUserInput()
-            if userInput.lower().replace(" ", "") == "done":
-                break
-            lines.text = userInput
-            lines.level = 1
+        #Prayer Focus (Section to be edited to work with GUI)
+        announcementsLabel = Label(self.announcementsFrame, text="Enter prayer focuses below: ")
+        announcementsLabel.pack()
 
-        #Current Series
-        #Adds a paragraph for the series information
-        lines = textFrame.add_paragraph()
-        print("Enter the name of the series you are going through: ")
-        #Gets user input on the series
-        userInput = self.getUserInput()
-        lines.text = "Series: " + userInput
-        
-        #Location of Meetings
-        #Adds a paragraphs for the location of the meetings
-        lines = textFrame.add_paragraph()
-        lines = textFrame.add_paragraph()
-        print("\nEnter where you are holding meetings: ")
-        #Gets user input on the meeting place
-        userInput = self.getUserInput()
-        lines.text = "Meeting place: " + userInput
+        prayerFocusText = Text(self.announcementsFrame)
+        prayerFocusText.pack()
+
+        #Adds a next button to move to the next page
+        nextButton = Button(self.announcementsFrame, text="Next", fg="green", command=lambda: self.addPrayers(prayerFocusText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.announcementsFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
+
+        '''
+            Section: Other Announcements
+        '''
+        self.otherAnnouncementsFrame = Frame(self.interface)
+
+        otherAnnouncementsLabel = Label(self.otherAnnouncementsFrame, text="Enter other announcements below:")
+        otherAnnouncementsLabel.pack()
+
+        otherAnnouncementsText = Text(self.otherAnnouncementsFrame)
+        otherAnnouncementsText.pack()
+
+        #Adds a next button to move to the next page
+        nextButton = Button(self.otherAnnouncementsFrame, text="Next", fg="green", command=lambda: self.addOtherAnnouncements(otherAnnouncementsText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.otherAnnouncementsFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
+
+        '''
+            Section: Series and Location
+        '''
+        self.seriesAndLocationFrame = Frame(self.interface)
+
+        seriesLabel = Label(self.seriesAndLocationFrame, text="Enter Series:")
+        seriesLabel.pack()
+
+        seriesText = Text(self.seriesAndLocationFrame, height="10")
+        seriesText.pack()
+
+        locationLabel = Label(self.seriesAndLocationFrame, text="Enter Location:")
+        locationLabel.pack()
+
+        locationText = Text(self.seriesAndLocationFrame, height="10")
+        locationText.pack()
+
+        #Adds a next button to move to the next page
+        nextButton = Button(self.seriesAndLocationFrame, text="Next", fg="green", command=lambda: self.addSeriesAndLocation(seriesText.get('1.0', 'end-1c'), locationText.get('1.0', 'end-1c'), textFrame))
+        nextButton.pack()
+        #Adds an exit button to close the application
+        exitButton = Button(self.seriesAndLocationFrame, text="Exit", fg="red", command=self.savePresentation)
+        exitButton.pack()
     
+    '''
+        Still need to do this portion!!!!
+    '''
     #Creates a lesson header slide
     def lessonHeaderSlide(self):
         #Gets the title of the lesson from the user
@@ -168,9 +256,119 @@ class CSUPowerPoint:
         userInput = self.getUserInput()
         textBox = slide.placeholders[1]
         textBox.text = userInput
-    
-    #Creates a bible passage using the KJV folder
+
+    '''
+        Figure out how to properly parse the selection
+    '''
+    #Creates a bible passage using the KJV folder (Helper Method)
     def biblePassage(self):
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+        #Create Frame for biblePassage
+        self.biblePassageFrame = Frame(self.interface, width="100")
+        self.biblePassageFrame.pack()
+
+        #Create a drop-down for selection of books from old and new testaments
+        booksOfBible = [
+            "Genesis",
+            "Exodus",
+            "Leviticus",
+            "Numbers",
+            "Deuteronomy",
+            "Joshua",
+            "Judges",
+            "Ruth",
+            "1 Samuel",
+            "2 Samuel",
+            "1 Kings",
+            "2 Kings",
+            "1 Chronicles",
+            "2 Chronicles",
+            "Ezra",
+            "Job",
+            "Psalms",
+            "Proverbs",
+            "Ecclesiastes",
+            "Song of Solomon",
+            "Isaiah",
+            "Jeremiah",
+            "Lamentations",
+            "Ezekiel",
+            "Daniel",
+            "Hosea",
+            "Joel",
+            "Amos",
+            "Obadiah",
+            "Jonah",
+            "Micah",
+            "Nahum",
+            "Habakkuk",
+            "Zephaniah",
+            "Haggai",
+            "Zechariah",
+            "Malachi",
+            "Matthew",
+            "Mark",
+            "Luke",
+            "John",
+            "Acts",
+            "Romans",
+            "1 Corinthians",
+            "2 Corinthians",
+            "Galatians",
+            "Ephesians",
+            "Philippians",
+            "Colossians",
+            "1 Thessalonians",
+            "2 Thessalonians",
+            "1 Timothy",
+            "2 Timothy",
+            "Titus",
+            "Philemon",
+            "Hebrews",
+            "James",
+            "1 Peter",
+            "2 Peter",
+            "1 John",
+            "2 John",
+            "3 John",
+            "Jude",
+            "Revelation"
+        ]
+        selectedBook = StringVar(self.biblePassageFrame)
+        selectedBook.set("Select a Book")
+
+        #This does not work well....need to see if we can change how it works or if there are other options
+        #Online says there is another library called ttk or something like that
+        bibleBookDropDown = OptionMenu(self.biblePassageFrame, selectedBook, *booksOfBible)
+        bibleBookDropDown.config(width=15)
+        bibleBookDropDown.pack()
+
+        #Get the chapter from the user
+        chapterLabel = Label(self.biblePassageFrame, text="Enter the Chapter: ")
+        chapterLabel.pack()
+        chapterText = Text(self.biblePassageFrame, height=1)
+        chapterText.pack()
+
+        #Get the start verse
+        verseStartLabel = Label(self.biblePassageFrame, text="Enter the Start Verse: ")
+        verseStartLabel.pack()
+        verseStart = Text(self.biblePassageFrame, height=1)
+        verseStart.pack()
+
+        #Get the end verse
+        verseEndLabel = Label(self.biblePassageFrame, text="Enter the end verse: ")
+        verseEndLabel.pack()
+        verseEnd = Text(self.biblePassageFrame, height=1)
+        verseEnd.pack()
+
+        #Adds a next button to move to the next page
+        #selectedBook = str(selectedBook.get().replace(" ", "").lower())
+        continueButton = Button(self.biblePassageFrame, text="Continue", fg="green", command=lambda: self)
+        continueButton.pack()
+
+        '''
         try:
             #Gets the book from th euser
             print("\nEnter book of the Bible: ")
@@ -228,53 +426,87 @@ class CSUPowerPoint:
             print("Must enter a valid number")
         except LookupError:#If the user enters an invalid verse, tell them it is invalid
             print("Invalid verses. No such passage exists")
+        '''
 
-    #Creates the header slide of the presentation
+    #Creates the header slide of the presentation (Helper Method)
     def header(self):
-        #Gets the header information from the user
-        print("Enter the header: ")
-        userInput = self.getUserInput()
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+        #Create the header frame
+        self.headerSlideFrame = Frame(self.interface)
+        self.headerSlideFrame.pack()
+
+        headerLabel = Label(self.headerSlideFrame, text="Enter the header: ")
+        headerLabel.pack()
+        headerText = Text(self.headerSlideFrame, height=1)
+        headerText.pack()
+
+        continueButton = Button(self.headerSlideFrame, text="Continue", fg="green", command=lambda: self.headerToLessonSlides(headerText.get('1.0', 'end-1c')))
+        continueButton.pack()
+
+    def headerToLessonSlides(self, title):
         #Assigns the values
-        (slideLayout, slide, textBox) = self.setSlideInfo(2, userInput)
+        (slideLayout, slide, textBox) = self.setSlideInfo(2, title)
+        self.headerSlideFrame.destroy()
+        self.lessonSlides()
 
-    #Defines the points of the message
-    def points(self):
-        #Gets the title of the slides from the user
-        print("Title of slide: ")
-        userInput = self.getUserInput()
-
+    def addPoints(self, title, points):
         #Creates the slide and textbox
-        (slideLayout, slide, textBox) = self.setSlideInfo(1, userInput)
+        (slideLayout, slide, textBox) = self.setSlideInfo(1, title)
         #Assigns a placeholder for the frame
         textBox = slide.shapes.placeholders[1]
         textFrame = textBox.text_frame
-        #Get all of the points from the user
-        print("Enter the points for the slide. Type \'done\' to finish slide")
-        textFrame.text = input("> ") + '\n'
-        #Until they enter "done"
-        while True:
-            userInput = self.getUserInput()
-            if userInput.lower().replace(" ", "") == 'done':
-                break
-            lines = textFrame.add_paragraph()
-            lines.text = userInput + '\n'
+
+        points = points.splitlines()
+        for index in range(len(points)):
+            if(points[index].startswith("  ")):
+                lines = textFrame.add_paragraph()
+                lines.text = points[index]
+                lines.level = 1
+            else:
+                lines = textFrame.add_paragraph()
+                lines.text = points[index]
+                lines.level = 0
+        
+        self.pointsSlideFrame.destroy()
+        self.lessonSlides()
+
+    #Defines the points of the message (Helper Method)
+    def points(self):
+        #Destroy the lessonSlidesFrame
+        self.lessonSlidesFrame.destroy()
+
+        #Create PointsSlideFrame
+        self.pointsSlideFrame = Frame(self.interface)
+        self.pointsSlideFrame.pack()
+
+        pointsTitleLabel = Label(self.pointsSlideFrame, text="Enter Title of Slide: ")
+        pointsTitleLabel.pack()
+        pointsTitleText = Text(self.pointsSlideFrame, height=1)
+        pointsTitleText.pack()
+
+        pointsLabel = Label(self.pointsSlideFrame, text="Enter points below: ")
+        pointsLabel.pack()
+        pointsText = Text(self.pointsSlideFrame)
+        pointsText.pack()
+
+        continueButton = Button(self.pointsSlideFrame, text="Continue", fg="green", command=lambda: self.addPoints(pointsTitleText.get('1.0', 'end-1c'), pointsText.get('1.0', 'end-1c')))
+        continueButton.pack()
 
     #Defines the lesson slides and asks the user for input each time until they quit
     def lessonSlides(self):
-        while True:
-            #B = Bible Passage, H = Header, P = Points, quit = create presentation
-            print("\nChoices: \'B\' for Bible Passage, \'H\' for slide with a header, \'P\' for slide with points, \'quit\' to complete lesson")
-            userInput = input("> ")
-            userInput = userInput.upper().replace(" ", "")
-            if(userInput == 'QUIT'):
-                break
-            elif(userInput == 'B'):#Create slide(s) with the passages
-                self.biblePassage()
-            elif(userInput == 'H'):#Create a header slide to define a section
-                self.header()
-            elif(userInput == 'P'):#Create a points slide to further discuss topic
-                self.points()
-            else:#Tell them it was an invalid choice
-                print("Enter a valid choice")
-        #Create and save the presentation
-        self.presentation.save("your_powerpoint.pptx")
+        #Add Lesson Slides frame
+        self.lessonSlidesFrame = Frame(self.interface)
+        self.lessonSlidesFrame.pack()
+
+        biblePassageButton = Button(self.lessonSlidesFrame, text="Add Bible Passage", command=lambda: self.biblePassage())
+        biblePassageButton.pack()
+        headerButton = Button(self.lessonSlidesFrame, text="Add Header", command=lambda: self.header())
+        headerButton.pack()
+        pointsButton = Button(self.lessonSlidesFrame, text="Add Points", command=lambda: self.points())
+        pointsButton.pack()
+
+        #Adds a next button to move to the next page
+        saveButton = Button(self.lessonSlidesFrame, text="Save Presentation", fg="green", command=lambda: self.savePresentation())
+        saveButton.pack()

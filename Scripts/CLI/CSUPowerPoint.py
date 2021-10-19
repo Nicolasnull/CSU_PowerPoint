@@ -5,9 +5,9 @@ from pptx.util import Pt
 class CSUPowerPoint:
     def __init__(self):
         #The presentation uses the format/design of the chosen powerpoint
-        self.presentation = Presentation("../Files/format.pptx")
+        self.presentation = Presentation("../../Files/format.pptx")
         #Has all officer information
-        self.groupInfoFile = open("../Files/groupInfo.txt", "r")
+        self.groupInfoFile = open("../../Files/groupInfo.txt", "r")
 
     #Performs the introduction in the CLI
     def introduction(self):
@@ -177,7 +177,7 @@ class CSUPowerPoint:
             #Sets it to lowercase after replacing the spaces with empty strings
             userInput = input("> ").replace(" ", "").lower()
             #Grabs the book text file
-            book = open('../Files/KJV/' + userInput + '.txt', 'r')
+            book = open('../../Files/KJV/' + userInput + '.txt', 'r')
             #Asks the user for the chapter
             chapter = self.getChapterAndVerses("Chapter: ")
             #Asks the user for the starting verse
